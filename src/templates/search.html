@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>{{trad_results}}</h2>
+        <a href=".">{{trad_back}}</a>
+        <div class="galery">
+            {{#each recipe}}
+            <a href="/{{this.lang}}/recipe/{{this.slug}}">
+                <div>
+                    <span><img src="{{this.photo_url}}" class="mini-img"></span><span>{{this.title}}</span>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+        <div class="pagination">
+            {{#if prev_page}}
+            <form>
+                <input type="hidden" name="search" value="{{search_query}}">
+                <input type="hidden" name="page" value="1">
+                <input type="submit" value="<<">
+            </form>
+            <form>
+                <input type="hidden" name="search" value="{{search_query}}">
+                <input type="hidden" name="page" value="{{prev_page}}">
+                <input type="submit" value="<">
+            </form>
+            {{/if}}
+            {{#if next_page}}
+            <form>
+                <input type="hidden" name="search" value="{{search_query}}">
+                <input type="hidden" name="page" value="{{next_page}}">
+                <input type="submit" value=">">
+            </form>
+            <form>
+                <input type="hidden" name="search" value="{{search_query}}">
+                <input type="hidden" name="page" value="{{last_page}}">
+                <input type="submit" value=">>">
+            </form>
+            {{/if}}
+        </div>
+    </div>
+</body>

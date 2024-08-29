@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/style.css">
+    <script src="./worker.js" type="module"></script>
+</head>
+
+<body>
+    <div style="display: contents">
+        <textarea name="body"></textarea>
+        <button disabled onclick=post(event)>Fire</button>
+    </div>
+</body>
+<script>
+    const challenge = [{{ #each challenges }}"{{ this }}", {{/each }}]
+    var nb_chal = challenge.length
+    const results = []
+    var workers = []
+    var btn_enabled = document.querySelector('button:not(:disabled)')
+    if (btn_enabled) btn_enabled.setAttribute('disabled')
+    for (var i = 0; i < 4; i++) {
+        var w = new Worker('worker.js');
+        workers.push(w)
+        w.onmessage = (ev) => {
+            if (ev.data != '-ready-') {
+                results.push(ev.data)
+            }
+            if (results.length == nb_chal) {
+                document.querySelector('button').removeAttribute('disabled')
+            }
+            if (challenge.length) {
+                ev.target.postMessage({ challenge: challenge.pop() })
+            }
+        }
+    }
+    var t = Date.now()
+    fetch("/spow.wasm").then(
+        (result) => result.arrayBuffer().then((buf) => {
+            for (var i = 0; i < 4; i++) {
+                workers[i].postMessage({ buf })
+            }
+        }).then(() => { })
+    )
+
+    function post(event) {
+        fetch("/test", { method: 'POST', body: JSON.stringify({ challenges: results, body: document.querySelector('textarea').value }), headers: { "Content-Type": "application/json" } }).then(() => { window.location = '/' })
+    }
+</script>
+
+</html>

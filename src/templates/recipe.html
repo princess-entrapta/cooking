@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="center">
+            <h2>{{recipe.title}}</h2>
+            <a href=".">{{trad_home}}</a>
+            <div>{{trad_preparation}} {{recipe.preparation_time_min}}</div>
+            <div>{{trad_cooking}} {{recipe.cooking_time_min}}</div>
+            <div>{{trad_servings}} {{recipe.servings}}</div>
+            <img src={{recipe.photo_url}} class="large-img"></img>
+        </div>
+        <div class="flex">
+            <div class="table">
+                {{#each recipe.ingredients}}
+                <div>
+                    <span>{{this.name}}</span><span>{{this.amount}} {{this.unit}}</span>
+                </div>
+                {{/each}}
+            </div>
+            <div class="instructions">
+                <div>{{{recipe.preparation_steps}}}</div>
+            </div>
+        </div>
+    </div>
+</body>
